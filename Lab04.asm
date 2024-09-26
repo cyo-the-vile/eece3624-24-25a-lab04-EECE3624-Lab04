@@ -1,11 +1,15 @@
 /**************************************************************************
  *     File: Lab04.asm
- * Lab Name: 
- *   Author: 
- *  Created: 
+ * Lab Name: What's Your Calling?
+ *   Author: Ben Roeder
+ *  Created: 9/17/2024
  *
- * This program...
+ * This program manipulates the stack to process a factorial number.
  *************************************************************************/ 
+
+.def n = R16 
+.def result = R17
+
 
 .org 0x0000 ; next instruction will be written to address 0x0000
             ; (the location of the reset vector)
@@ -32,5 +36,40 @@ factN:
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; recursive factorial code begins here
 
+
+;	 read from stop of stack. do not touch any code below.
+	IN YL, SPL
+	IN YH, SPH
+	LDD R23, Y+3
+	
+	
+	CPI R23, 1
+	BREQ escape
+
+	;maybe factorial code. only touch code below
+
+
+
+
+	DEC R23
+	PUSH R23
+	CALL factN
+	POP R2
+	IN YL, SPL
+	IN YH, SPH
+	LDD R3, Y+3
+    MUL R2, R3
+	STD Y+3, R0
+
+
+	; dont touch
+
+	IN YL, SPL
+	IN YH, SPH
+;	STD Y+3, R23
+
+
+
+escape: 
 	; return from the factN subroutine
 	ret 
